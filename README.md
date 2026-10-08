@@ -62,7 +62,13 @@ npm run dev
 
 ```bash
 npm run lint
+npm test            # Vitest + Testing Library (jsdom), single run
+npm run test:watch  # watch mode
 ```
+
+Tests live next to the code they cover (`*.test.ts(x)`). They run with `vitest.config.ts`, not
+`vite.config.ts`, so the federation plugin never tries to reach a portal; the federated
+`xxx_portal/routes` modules are mocked per test with `vi.mock`.
 
 The full map lives in `library-docs`.
 
