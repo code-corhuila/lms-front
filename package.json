@@ -9,7 +9,9 @@
     "lint": "oxlint",
     "preview": "vite preview",
     "test": "vitest run",
-    "test:watch": "vitest"
+    "test:watch": "vitest",
+    "test:stress": "vitest run --config vitest.stress.config.ts",
+    "perf:bundle": "npm run build && node scripts/check-bundle-size.mjs"
   },
   "dependencies": {
     "@fontsource/inter": "^5.3.0",

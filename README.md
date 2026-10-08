@@ -64,11 +64,22 @@ npm run dev
 npm run lint
 npm test            # Vitest + Testing Library (jsdom), single run
 npm run test:watch  # watch mode
+npm run test:stress # load / render-stress tests, prints [perf] timings
+npm run perf:bundle # production build + gzip size budget
 ```
 
 Tests live next to the code they cover (`*.test.ts(x)`). They run with `vitest.config.ts`, not
 `vite.config.ts`, so the federation plugin never tries to reach a portal; the federated
 `xxx_portal/routes` modules are mocked per test with `vi.mock`.
+
+- **Connection tests** (`apiClient.connection.test.ts`, part of `npm test`) send real HTTP
+  requests to a local server standing in for the gateway (`src/test/fakeGateway.ts`): headers on
+  the wire, real timeouts, refused and dropped connections, CORS preflight.
+- **Stress tests** (`*.stress.test.ts(x)`, `vitest.stress.config.ts`) put `apiClient` and the UI
+  under load. Their time budgets are loose on purpose — they catch order-of-magnitude
+  regressions, not small slowdowns.
+- **Bundle budget** (`scripts/check-bundle-size.mjs`): largest chunk ≤ 80 KiB and all JS+CSS
+  ≤ 260 KiB, gzip.
 
 The full map lives in `library-docs`.
 
