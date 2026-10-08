@@ -1,6 +1,6 @@
 import react from '@vitejs/plugin-react'
 import type { Plugin } from 'vite'
-import { defineConfig } from 'vitest/config'
+import { configDefaults, defineConfig } from 'vitest/config'
 
 // Kept apart from vite.config.ts on purpose: the federation plugin there
 // tries to reach each portal's remoteEntry.js, which a unit test must never
@@ -22,6 +22,8 @@ export default defineConfig({
     environment: 'jsdom',
     setupFiles: ['./src/test/setup.ts'],
     include: ['src/**/*.test.{ts,tsx}'],
+    // Load/render-stress tests run on their own: vitest.stress.config.ts.
+    exclude: [...configDefaults.exclude, 'src/**/*.stress.test.{ts,tsx}'],
     restoreMocks: true,
   },
 })
