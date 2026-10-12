@@ -4,6 +4,18 @@
 @import "@fontsource/inter/600.css";
 @import "@fontsource/inter/700.css";
 
+/* Each domain portal compiles its own Tailwind build by scanning only its
+   own source — a class used only inside a portal's own pages never makes it
+   into that portal's bundle when it's instead mounted here as a Module
+   Federation remote, since the shell is what's actually running and its
+   build never saw that class anywhere. Scanning the sibling portal repos
+   too (ADR-006's sibling-directory convention — they're checked out next to
+   this one) closes that gap: whatever Tailwind class any remote's page
+   uses, the shell's own stylesheet now has it compiled in. */
+@source "../../lms-membership-portal/src/**/*.{ts,tsx}";
+@source "../../lms-catalog-portal/src/**/*.{ts,tsx}";
+@source "../../lms-circulation-portal/src/**/*.{ts,tsx}";
+
 /*
   LMS design tokens — see library-docs/12-ux-ui/design-system.md.
   Palette: indigo primary (trust/focus, fits an admin/back-office tool),
@@ -23,8 +35,50 @@
   --color-warning-500: #f59e0b;
   --color-error-500: #f43f5e;
   --color-error-600: #e11d48;
+
+  /* Layered, slate-tinted shadows (never pure black) — a near flush card
+     plus a soft ambient falloff, so elevation reads without a hard edge. */
+  --shadow-card: 0 1px 2px -1px rgb(15 23 42 / 0.06), 0 8px 20px -6px rgb(15 23 42 / 0.10);
+  --shadow-card-hover: 0 2px 4px -1px rgb(15 23 42 / 0.08), 0 16px 32px -8px rgb(15 23 42 / 0.14);
+  --shadow-button: 0 1px 2px rgb(15 23 42 / 0.05), 0 4px 10px -2px rgb(79 70 229 / 0.25);
+  --shadow-button-hover: 0 2px 4px rgb(15 23 42 / 0.06), 0 8px 18px -4px rgb(79 70 229 / 0.35);
+}
+
+html {
+  @apply bg-slate-50;
 }
 
 body {
   @apply bg-slate-50 text-slate-900 antialiased;
+}
+
+/* Browser surfaces that ship with UA defaults belonging to no design system
+   — themed from the same palette so they don't read as unstyled. */
+::selection {
+  @apply bg-primary-100 text-primary-700;
+}
+
+* {
+  scrollbar-color: var(--color-slate-300) transparent;
+  scrollbar-width: thin;
+}
+
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  @apply bg-slate-300;
+  border-radius: 999px;
+  border: 2px solid transparent;
+  background-clip: content-box;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  @apply bg-slate-400;
 }
