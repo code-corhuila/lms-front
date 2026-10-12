@@ -16,6 +16,7 @@ export default defineConfig({
     tailwindcss(),
     federation({
       name: 'shell',
+      filename: 'remoteEntry.js',
       // What every portal imports as 'shell/apiClient' / 'shell/session'
       // (each portal's own src/shell.d.ts documents this: "set on the
       // container's side, not this repo's, since a remote never declares
